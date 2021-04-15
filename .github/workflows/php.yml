@@ -6,7 +6,8 @@ on:
       - "master"
 
 jobs:
-  build:
+  test:
+    name: "Running Composer Test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
