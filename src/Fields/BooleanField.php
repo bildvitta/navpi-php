@@ -5,7 +5,7 @@ namespace Bildvitta\Navpi\Fields;
 /**
  * Class BooleanField.
  *
- * @package App\Http\Resources\Navpi\Fields
+ * @package Bildvitta\Navpi\Fields
  */
 class BooleanField extends Field
 {
