@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Bildvitta\\NavpiPhp\\": "src"
+            "Bildvitta\\Navpi\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Bildvitta\\NavpiPhp\\Tests\\": "tests"
+            "Bildvitta\\Navpi\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,10 +44,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bildvitta\\NavpiPhp\\NavpiPhpServiceProvider"
+                "Bildvitta\\Navpi\\NavpiPhpServiceProvider"
             ],
             "aliases": {
-                "NavpiPhp": "Bildvitta\\NavpiPhp\\NavpiPhpFacade"
+                "NavpiPhp": "Bildvitta\\Navpi\\NavpiPhpFacade"
             }
         }
     }

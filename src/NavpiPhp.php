@@ -1,6 +1,6 @@
 <?php
 
-namespace Bildvitta\NavpiPhp;
+namespace Bildvitta\Navpi;
 
 class NavpiPhp
 {
