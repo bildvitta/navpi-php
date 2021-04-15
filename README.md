@@ -1,11 +1,11 @@
-# Very short description of the package
+# Navpi - PHP
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/bildvitta/navpi-php.svg?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
-[![Build Status](https://img.shields.io/travis/bildvitta/navpi-php/master.svg?style=flat-square)](https://travis-ci.org/bildvitta/navpi-php)
-[![Quality Score](https://img.shields.io/scrutinizer/g/bildvitta/navpi-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/bildvitta/navpi-php)
-[![Total Downloads](https://img.shields.io/packagist/dt/bildvitta/navpi-php.svg?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/bildvitta/navpi-php?include_prereleases&style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
+[![Total Downloads](https://img.shields.io/packagist/dm/bildvitta/navpi-php?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
+[![Tests Master](https://img.shields.io/github/workflow/status/bildvitta/navpi-php/tests-master/master)](https://packagist.org/packages/bildvitta/navpi-php)
+[![License](https://img.shields.io/packagist/l/bildvitta/navpi-php?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+This package was created to assist in the development of API's for the standard used in [asteroid](https://github.com/bildvitta/asteroid).
 
 ## Installation
 
@@ -18,7 +18,20 @@ composer require bildvitta/navpi-php
 ## Usage
 
 ``` php
-// Usage description here
+use Bildvitta\Navpi\Fields;
+use Bildvitta\Navpi\NavpiResource;
+
+class CustomResource extends NavpiResource
+{
+    protected function fieldsMap()
+    {
+        return [
+            'name' => (new Fields\TextField('name'))
+                ->label('Nome completo')
+                ->exceptActions(['filters']),
+        ];
+    }
+}
 ```
 
 ### Testing
@@ -47,7 +60,3 @@ If you discover any security related issues, please email backend@bild.com.br in
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
