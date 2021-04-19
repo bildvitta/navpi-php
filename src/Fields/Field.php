@@ -7,6 +7,7 @@ abstract class Field
     protected $parameters;
     protected $except_actions;
     protected $multiple_relation_key = null;
+    protected $relation_key = null;
     protected $children_resource_class = null;
 
     public function __construct($name, $type, $parameters = [])
@@ -68,6 +69,17 @@ abstract class Field
     public function getMultipleRelationKey()
     {
         return $this->multiple_relation_key;
+    }
+
+    public function relationKey($relation_key='id')
+    {
+        $this->relation_key = $relation_key;
+        return $this;
+    }
+
+    public function getRelationKey()
+    {
+        return $this->relation_key;
     }
 
     public function childrenResourceClass()

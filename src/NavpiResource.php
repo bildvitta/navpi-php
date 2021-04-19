@@ -133,15 +133,21 @@ abstract class NavpiResource extends JsonResource
                 if ($field->hasExceptAction($this->action)) {
                     continue;
                 }
-
                 if ($children_resource_class = $field->childrenResourceClass()) {
                     $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
                     $item[$name] = $children_resource->results();
-                } elseif ($multiple_relation_key = $field->getMultipleRelationKey()) {
-                    $item[$name] = $resource->$name()->get([$multiple_relation_key])->pluck($multiple_relation_key);
-                } else {
-                    $item[$name] = $resource->$name;
+                    continue;
                 }
+                if ($multiple_relation_key = $field->getMultipleRelationKey()) {
+                    $item[$name] = $resource->$name()->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                    continue;
+                }
+                if ($relation_key = $field->getRelationKey()) {
+                    $item[$name] = $resource->$name()->first([$relation_key])->$relation_key;
+                    continue;
+                }
+
+                $item[$name] = $resource->$name;
             }
 
             $results[] = $item;
