@@ -143,7 +143,11 @@ abstract class NavpiResource extends JsonResource
                     continue;
                 }
                 if ($relation_key = $field->getRelationKey()) {
-                    $item[$name] = $resource->$name()->first([$relation_key])->$relation_key;
+                    if ($related_model = $resource->$name()->first([$relation_key])) {
+                        $item[$name] = $related_model->$relation_key;
+                    } else {
+                        $item[$name] = null;
+                    }
                     continue;
                 }
 
