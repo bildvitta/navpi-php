@@ -49,6 +49,11 @@ abstract class Field
         return $this->addParameter('read_only', $value);
     }
 
+    public function disabled($value = true)
+    {
+        return $this->addParameter("disabled", $value);
+    }
+
     public function required($value)
     {
         return $this->addParameter('required', $value);
