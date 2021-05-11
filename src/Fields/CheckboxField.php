@@ -9,8 +9,12 @@ class CheckboxField extends Field
         parent::__construct($name, 'checkbox');
     }
 
-    public function options($value)
+    public function options($value, $parsed=false)
     {
+        if ($parsed) {
+            return $this->addParameter('options', $value);
+        }
+
         $options = [];
         foreach ($value as $key => $value) {
             array_push($options, [
