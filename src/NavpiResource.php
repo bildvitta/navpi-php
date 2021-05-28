@@ -52,12 +52,12 @@ abstract class NavpiResource extends JsonResource
             $this->addWith('fields', $fields);
         }
 
-        if ($results = $this->results()) {
-            if ($this->resource instanceof Collection) {
-                $this->addWith('results', $results);
-            } else {
-                $this->addWith('result', $results[0]);
-            }
+        $results = $this->results();
+
+        if ($this->resource instanceof Collection) {
+            $this->addWith('results', $results);
+        } elseif ($results) {
+            $this->addWith('result', $results[0]);
         }
 
         if ($this->errors) {

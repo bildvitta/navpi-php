@@ -9,6 +9,11 @@ class DecimalField extends Field
         parent::__construct($name, 'decimal');
     }
 
+    public function mask($value)
+    {
+        return $this->addParameter('mask', $value);
+    }
+
     public function places($value)
     {
         return $this->addParameter('places', $value);

@@ -9,6 +9,11 @@ class MoneyField extends Field
         parent::__construct($name, 'money');
     }
 
+    public function mask($value)
+    {
+        return $this->addParameter('mask', $value);
+    }
+
     public function places($value)
     {
         return $this->addParameter('places', $value);
