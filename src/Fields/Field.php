@@ -52,7 +52,7 @@ abstract class Field
 
     public function disabled($value = true)
     {
-        return $this->addParameter("disabled", $value);
+        return $this->addParameter("disable", $value);
     }
 
     public function required($value)
