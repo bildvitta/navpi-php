@@ -139,7 +139,13 @@ abstract class NavpiResource extends JsonResource
                     continue;
                 }
                 if ($multiple_relation_key = $field->getMultipleRelationKey()) {
-                    $item[$name] = $resource->$name()->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                    $related_list = $resource->$name();
+
+                    if ($related_list instanceof Collection) {
+                        $item[$name] = $related_list->pluck($multiple_relation_key);
+                    } else {
+                        $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                    }
                     continue;
                 }
                 if ($relation_key = $field->getRelationKey()) {
