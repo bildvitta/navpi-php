@@ -32,7 +32,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
@@ -43,7 +43,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function with($request)
@@ -69,12 +69,6 @@ abstract class NavpiResource extends JsonResource
         }
 
         return $this->withs;
-    }
-
-    public function toResponse($request) {
-        $response = parent::toResponse($request);
-        $response->setStatusCode($this->status['code']);
-        return $response;
     }
 
     public function fields()
@@ -156,6 +150,10 @@ abstract class NavpiResource extends JsonResource
                     }
                     continue;
                 }
+                if ($field->getType() == 'function') {
+                    $item[$name] = $resource->$name();
+                    continue;
+                }
 
                 $item[$name] = $resource->$name;
             }
@@ -164,6 +162,13 @@ abstract class NavpiResource extends JsonResource
         }
 
         return $results;
+    }
+
+    public function toResponse($request)
+    {
+        $response = parent::toResponse($request);
+        $response->setStatusCode($this->status['code']);
+        return $response;
     }
 
     public function addMetadata($key, $value)
