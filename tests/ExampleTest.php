@@ -7,7 +7,6 @@ use Bildvitta\Navpi\NavpiPhpServiceProvider;
 
 class ExampleTest extends TestCase
 {
-
     protected function getPackageProviders($app)
     {
         return [NavpiPhpServiceProvider::class];

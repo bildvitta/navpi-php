@@ -25,6 +25,11 @@ abstract class Field
         return $this;
     }
 
+    public function getType()
+    {
+        return $this->parameters['type'];
+    }
+
     public function toArray()
     {
         return $this->parameters;
@@ -52,7 +57,7 @@ abstract class Field
 
     public function disabled($value = true)
     {
-        return $this->addParameter("disable", $value);
+        return $this->addParameter('disable', $value);
     }
 
     public function required($value)
@@ -76,7 +81,7 @@ abstract class Field
         return $this->multiple_relation_key;
     }
 
-    public function relationKey($relation_key='id')
+    public function relationKey($relation_key = 'id')
     {
         $this->relation_key = $relation_key;
         return $this;

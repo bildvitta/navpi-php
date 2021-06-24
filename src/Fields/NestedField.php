@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Bildvitta\Navpi\Fields;
 
 class NestedField extends Field

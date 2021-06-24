@@ -13,7 +13,7 @@ class PasswordField extends Field
     {
         return $this->addParameter('pattern', $value);
     }
-    
+
     public function hideStrengthChecker($value = true)
     {
         return $this->addParameter('hide_strength_checker', $value);
