@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Bildvitta\Navpi\Fields;
-
 
 class FunctionField extends Field
 {

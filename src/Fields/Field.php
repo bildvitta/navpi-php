@@ -57,7 +57,7 @@ abstract class Field
 
     public function disabled($value = true)
     {
-        return $this->addParameter("disable", $value);
+        return $this->addParameter('disable', $value);
     }
 
     public function required($value)

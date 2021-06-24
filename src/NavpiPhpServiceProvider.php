@@ -21,7 +21,7 @@ class NavpiPhpServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('navpi-php.php'),
+                __DIR__ . '/../config/config.php' => config_path('navpi-php.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,7 +50,7 @@ class NavpiPhpServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'navpi-php');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'navpi-php');
 
         // Register the main class to use with the facade
         $this->app->singleton('navpi-php', function () {
