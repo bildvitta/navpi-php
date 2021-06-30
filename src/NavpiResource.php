@@ -150,6 +150,12 @@ abstract class NavpiResource extends JsonResource
                     }
                     continue;
                 }
+                if ($pivot = $field->getPivot()) {
+                    if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                        $item[$name] = $resource->pivot->$pivot;
+                    }
+                    continue;
+                }
                 if ($field->getType() == 'function') {
                     $item[$name] = $resource->$name();
                     continue;
