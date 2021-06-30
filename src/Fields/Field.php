@@ -9,6 +9,7 @@ abstract class Field
     protected $multiple_relation_key = null;
     protected $relation_key = null;
     protected $children_resource_class = null;
+    protected $pivot = null;
 
     public function __construct($name, $type, $parameters = [])
     {
@@ -95,5 +96,20 @@ abstract class Field
     public function childrenResourceClass()
     {
         return $this->children_resource_class;
+    }
+
+    public function pivot($field = null)
+    {
+        if ($field) {
+            $this->pivot = $field;
+        } else {
+            $this->pivot = $this->parameters['name'];
+        }
+        return $this;
+    }
+
+    public function getPivot()
+    {
+        return $this->pivot;
     }
 }
