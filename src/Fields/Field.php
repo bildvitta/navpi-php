@@ -112,4 +112,9 @@ abstract class Field
     {
         return $this->pivot;
     }
+
+    public static function create($name)
+    {
+        return new static($name);
+    }
 }
