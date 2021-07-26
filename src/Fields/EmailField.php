@@ -6,7 +6,7 @@ class EmailField extends Field
 {
     public function __construct($name)
     {
-        parent::__construct($name, 'text');
+        parent::__construct($name, 'email');
     }
 
     public function prefix($value)
