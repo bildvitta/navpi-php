@@ -179,7 +179,7 @@ abstract class NavpiResource extends JsonResource
 
     public function addMetadata($key, $value)
     {
-        $this->metadata[$key][] = $value;
+        $this->metadata[$key] = $value;
         return $this;
     }
 
