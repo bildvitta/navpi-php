@@ -157,7 +157,7 @@ abstract class NavpiResource extends JsonResource
                     continue;
                 }
                 if ($field->getType() == 'function') {
-                    $item[$name] = $resource->$name();
+                    $item[$name] = $resource->$name($field->getFunctionParams());
                     continue;
                 }
 
