@@ -2,6 +2,7 @@
 
 namespace Bildvitta\Navpi;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -158,6 +159,15 @@ abstract class NavpiResource extends JsonResource
                 }
                 if ($field->getType() == 'function') {
                     $item[$name] = $resource->$name($field->getFunctionParams());
+                    continue;
+                }
+
+                if ($field->getType() == 'date') {
+                    if (!is_null($resource->$name)) {
+                        $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
+                    } else {
+                        $item[$name] = $resource->$name;
+                    }
                     continue;
                 }
 
