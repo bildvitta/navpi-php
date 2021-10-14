@@ -86,10 +86,12 @@ abstract class NavpiResource extends JsonResource
     public function fields()
     {
         if (is_null($this->action)) {
-            $fields = [];
+            return [];
         }
 
+        $fields = [];
         $fields_map = $this->fieldsMap();
+
         foreach ($fields_map as $name => $field) {
             if (request()->has('attributes')) {
                 $attributes = request()->get('attributes');
