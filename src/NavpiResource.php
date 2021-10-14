@@ -15,14 +15,23 @@ abstract class NavpiResource extends JsonResource
      * @var string
      */
     public static $wrap = 'status';
+
     protected $withs = [];
+
     protected $action = null;
+
     protected $metadata = [];
+
     protected $errors = [];
+
     protected $status = [
         'code' => 200
     ];
 
+    /**
+     * @param  null  $action
+     * @param  null  $resource
+     */
     public function __construct($action = null, $resource = null)
     {
         parent::__construct($resource);
@@ -33,7 +42,8 @@ abstract class NavpiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return array
      */
     public function toArray($request)
@@ -44,7 +54,8 @@ abstract class NavpiResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param Request $request
+     * @param  Request  $request
+     *
      * @return array
      */
     public function with($request)
@@ -75,15 +86,22 @@ abstract class NavpiResource extends JsonResource
     public function fields()
     {
         if (is_null($this->action)) {
-            return [];
+            $fields = [];
         }
-
-        $fields = [];
 
         $fields_map = $this->fieldsMap();
         foreach ($fields_map as $name => $field) {
-            if ($field->hasExceptAction($this->action)) {
-                continue;
+            if (request()->has('attributes')) {
+                $attributes = request()->get('attributes');
+
+                if (is_array($attributes) && ! in_array($name, $attributes)) {
+                        continue;
+                    }
+
+            } else {
+                if ($field->hasExceptAction($this->action)) {
+                    continue;
+                }
             }
 
             $item = $field->toArray();
@@ -104,6 +122,7 @@ abstract class NavpiResource extends JsonResource
     public function addWith($key, $value)
     {
         $this->withs[$key] = $value;
+
         return $this;
     }
 
@@ -122,56 +141,64 @@ abstract class NavpiResource extends JsonResource
         $fields_map = $this->fieldsMap();
         $resources = ($this->resource instanceof Collection) ? $this->resource : [$this->resource];
         foreach ($resources as $resource) {
-            $item = [];
-
             foreach ($fields_map as $name => $field) {
-                if ($field->hasExceptAction($this->action)) {
-                    continue;
-                }
-                if ($children_resource_class = $field->childrenResourceClass()) {
-                    $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
-                    $item[$name] = $children_resource->results();
-                    continue;
-                }
-                if ($multiple_relation_key = $field->getMultipleRelationKey()) {
-                    $related_list = $resource->$name();
+                if (request()->has('attributes')) {
+                    $attributes = request()->get('attributes');
 
-                    if ($related_list instanceof Collection) {
-                        $item[$name] = $related_list->pluck($multiple_relation_key);
-                    } else {
-                        $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
-                    }
-                    continue;
-                }
-                if ($relation_key = $field->getRelationKey()) {
-                    if ($related_model = $resource->$name()->first([$relation_key])) {
-                        $item[$name] = $related_model->$relation_key;
-                    } else {
-                        $item[$name] = null;
-                    }
-                    continue;
-                }
-                if ($pivot = $field->getPivot()) {
-                    if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
-                        $item[$name] = $resource->pivot->$pivot;
-                    }
-                    continue;
-                }
-                if ($field->getType() == 'function') {
-                    $item[$name] = $resource->$name($field->getFunctionParams());
-                    continue;
-                }
-
-                if ($field->getType() == 'date') {
-                    if (!is_null($resource->$name)) {
-                        $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
-                    } else {
+                    if (is_array($attributes) && in_array($name, $attributes)) {
                         $item[$name] = $resource->$name;
-                    }
-                    continue;
-                }
 
-                $item[$name] = $resource->$name;
+                        continue;
+                    }
+                } else {
+                    if ($field->hasExceptAction($this->action)) {
+                        continue;
+                    }
+                    if ($children_resource_class = $field->childrenResourceClass()) {
+                        $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
+                        $item[$name] = $children_resource->results();
+                        continue;
+                    }
+                    if ($multiple_relation_key = $field->getMultipleRelationKey()) {
+                        $related_list = $resource->$name();
+
+                        if ($related_list instanceof Collection) {
+                            $item[$name] = $related_list->pluck($multiple_relation_key);
+                        } else {
+                            $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                        }
+                        continue;
+                    }
+                    if ($relation_key = $field->getRelationKey()) {
+                        if ($related_model = $resource->$name()->first([$relation_key])) {
+                            $item[$name] = $related_model->$relation_key;
+                        } else {
+                            $item[$name] = null;
+                        }
+                        continue;
+                    }
+                    if ($pivot = $field->getPivot()) {
+                        if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                            $item[$name] = $resource->pivot->$pivot;
+                        }
+                        continue;
+                    }
+                    if ($field->getType() == 'function') {
+                        $item[$name] = $resource->$name($field->getFunctionParams());
+                        continue;
+                    }
+
+                    if ($field->getType() == 'date') {
+                        if (! is_null($resource->$name)) {
+                            $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
+                        } else {
+                            $item[$name] = $resource->$name;
+                        }
+                        continue;
+                    }
+
+                    $item[$name] = $resource->$name;
+                }
             }
 
             $results[] = $item;
@@ -184,18 +211,21 @@ abstract class NavpiResource extends JsonResource
     {
         $response = parent::toResponse($request);
         $response->setStatusCode($this->status['code']);
+
         return $response;
     }
 
     public function addMetadata($key, $value)
     {
         $this->metadata[$key] = $value;
+
         return $this;
     }
 
     public function addError($field_name, $message)
     {
         $this->errors[$field_name][] = $message;
+
         return $this;
     }
 
@@ -207,12 +237,14 @@ abstract class NavpiResource extends JsonResource
         } else {
             unset($this->status['text']);
         }
+
         return $this;
     }
 
     public function count($value)
     {
         $this->addWith('count', $value);
+
         return $this;
     }
 }
