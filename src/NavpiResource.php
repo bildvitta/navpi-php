@@ -96,7 +96,7 @@ abstract class NavpiResource extends JsonResource
             if (request()->has('attributes')) {
                 $attributes = request()->get('attributes');
 
-                if (is_array($attributes) && ! in_array($name, $attributes)) {
+                if (is_array($attributes) && !in_array($name, $attributes)) {
                     continue;
                 }
             } else {
@@ -183,7 +183,7 @@ abstract class NavpiResource extends JsonResource
                         }
 
                         if ($field->getType() == 'date') {
-                            if (! is_null($resource->$name)) {
+                            if (!is_null($resource->$name)) {
                                 $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                             } else {
                                 $item[$name] = $resource->$name;
@@ -232,7 +232,7 @@ abstract class NavpiResource extends JsonResource
                     }
 
                     if ($field->getType() == 'date') {
-                        if (! is_null($resource->$name)) {
+                        if (!is_null($resource->$name)) {
                             $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                         } else {
                             $item[$name] = $resource->$name;
