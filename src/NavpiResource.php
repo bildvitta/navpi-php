@@ -141,15 +141,57 @@ abstract class NavpiResource extends JsonResource
 
         $fields_map = $this->fieldsMap();
         $resources = ($this->resource instanceof Collection) ? $this->resource : [$this->resource];
+
+        $attributes = collect(request()->get('attributes'));
+
         foreach ($resources as $resource) {
             foreach ($fields_map as $name => $field) {
                 if (request()->has('attributes')) {
-                    $attributes = request()->get('attributes');
+                    if ($attributes->search($name) !== false) {
+                        if ($children_resource_class = $field->childrenResourceClass()) {
+                            $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
+                            $item[$name] = $children_resource->results();
+                            continue;
+                        }
+                        if ($multiple_relation_key = $field->getMultipleRelationKey()) {
+                            $related_list = $resource->$name();
 
-                    if (is_array($attributes) && in_array($name, $attributes)) {
+                            if ($related_list instanceof Collection) {
+                                $item[$name] = $related_list->pluck($multiple_relation_key);
+                            } else {
+                                $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                            }
+                            continue;
+                        }
+                        if ($relation_key = $field->getRelationKey()) {
+                            if ($related_model = $resource->$name()->first([$relation_key])) {
+                                $item[$name] = $related_model->$relation_key;
+                            } else {
+                                $item[$name] = null;
+                            }
+                            continue;
+                        }
+                        if ($pivot = $field->getPivot()) {
+                            if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                                $item[$name] = $resource->pivot->$pivot;
+                            }
+                            continue;
+                        }
+                        if ($field->getType() == 'function') {
+                            $item[$name] = $resource->$name($field->getFunctionParams());
+                            continue;
+                        }
+
+                        if ($field->getType() == 'date') {
+                            if (!is_null($resource->$name)) {
+                                $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
+                            } else {
+                                $item[$name] = $resource->$name;
+                            }
+                            continue;
+                        }
+
                         $item[$name] = $resource->$name;
-
-                        continue;
                     }
                 } else {
                     if ($field->hasExceptAction($this->action)) {
