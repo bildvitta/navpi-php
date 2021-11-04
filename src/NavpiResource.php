@@ -29,8 +29,8 @@ abstract class NavpiResource extends JsonResource
     ];
 
     /**
-     * @param  null  $action
-     * @param  null  $resource
+     * @param null $action
+     * @param null $resource
      */
     public function __construct($action = null, $resource = null)
     {
@@ -42,7 +42,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -54,7 +54,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */

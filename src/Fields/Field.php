@@ -26,9 +26,19 @@ abstract class Field
         return $this;
     }
 
+    public static function create($name)
+    {
+        return new static($name);
+    }
+
     public function getType()
     {
         return $this->parameters['type'];
+    }
+
+    public function getName()
+    {
+        return $this->parameters['name'];
     }
 
     public function toArray()
@@ -111,10 +121,5 @@ abstract class Field
     public function getPivot()
     {
         return $this->pivot;
-    }
-
-    public static function create($name)
-    {
-        return new static($name);
     }
 }
