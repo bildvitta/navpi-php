@@ -27,7 +27,101 @@ class FieldTest extends FieldsTestCase
         $this->assertEquals('base_field', $this->baseField->getType());
     }
 
+    public function test_field_exceptActions()
+    {
+        $this->baseField->exceptActions(['create']);
 
+        $this->assertTrue($this->baseField->hasExceptAction('create'));
+    }
+
+    public function test_field_default()
+    {
+        $this->baseField->default(true);
+
+        $this->assertEquals(true, $this->getProperty($this->baseField, 'default'));
+    }
+
+    public function test_field_label()
+    {
+        $this->baseField->label('Kamikaze');
+
+        $this->assertEquals('Kamikaze', $this->getProperty($this->baseField, 'label'));
+    }
+
+    public function test_field_disabled()
+    {
+        $this->baseField->disabled();
+
+        $this->assertEquals(true, $this->getProperty($this->baseField, 'disable'));
+    }
+
+    public function test_field_create()
+    {
+        $created = BaseField::create('joverson');
+
+        $this->assertEquals('joverson', $this->getProperty($created, 'name'));
+    }
+
+    public function test_field_hint()
+    {
+        $this->baseField->hint('Kamikaze');
+
+        $this->assertEquals('Kamikaze', $this->getProperty($this->baseField, 'hint'));
+    }
+
+    public function test_field_readOnly()
+    {
+        $this->baseField->readOnly(true);
+
+        $this->assertEquals(true, $this->getProperty($this->baseField, 'read_only'));
+    }
+
+    public function test_field_required()
+    {
+        $this->baseField->required(true);
+
+        $this->assertEquals(true, $this->getProperty($this->baseField, 'required'));
+    }
+
+    public function test_field_relationKey()
+    {
+        $this->baseField->relationKey();
+
+        $this->assertEquals('id', $this->baseField->getRelationKey());
+    }
+
+    public function test_field_getMultipleRelationKey()
+    {
+        $this->assertEquals(null, $this->baseField->getMultipleRelationKey());
+    }
+
+    public function test_field_childrenResourceClass()
+    {
+        $this->assertEquals(null, $this->baseField->childrenResourceClass());
+    }
+
+    public function test_field_without_pivot()
+    {
+        $created = BaseField::create('joverson');
+
+        $this->assertEquals(null, $created->getPivot());
+    }
+
+    public function test_field_with_pivot()
+    {
+        $this->baseField->pivot('quantity');
+
+        $this->assertEquals('quantity', $this->baseField->getPivot());
+    }
+
+    public function test_field_toArray()
+    {
+        $array = $this->baseField->toArray();
+
+        $this->assertIsArray($array);
+        $this->assertArrayHasKey('name', $array);
+        $this->assertArrayHasKey('type', $array);
+    }
 
     protected function setUp(): void
     {
