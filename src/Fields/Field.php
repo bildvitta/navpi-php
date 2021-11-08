@@ -5,6 +5,7 @@ namespace Bildvitta\Navpi\Fields;
 abstract class Field
 {
     protected $parameters;
+    protected $enable_actions;
     protected $except_actions;
     protected $multiple_relation_key = null;
     protected $relation_key = null;
@@ -17,6 +18,7 @@ abstract class Field
         $this->addParameter('name', $name);
         $this->addParameter('type', $type);
 
+        $this->enable_actions = ["*"];
         $this->except_actions = [];
     }
 
@@ -34,11 +36,6 @@ abstract class Field
     public function getType()
     {
         return $this->parameters['type'];
-    }
-
-    public function getName()
-    {
-        return $this->parameters['name'];
     }
 
     public function toArray()
@@ -82,9 +79,30 @@ abstract class Field
         return $this;
     }
 
+    public function hasAction($action)
+    {
+        return !$this->hasExceptAction($action) || $this->hasEnableAction($action);
+    }
+
     public function hasExceptAction($action)
     {
         return in_array($action, $this->except_actions);
+    }
+
+    public function hasEnableAction($action)
+    {
+        return in_array($action, $this->enable_actions) || in_array("*", $this->enable_actions);
+    }
+
+    public function getName()
+    {
+        return $this->parameters['name'];
+    }
+
+    public function enableActions($enable_actions)
+    {
+        $this->enable_actions = $enable_actions;
+        return $this;
     }
 
     public function getMultipleRelationKey()

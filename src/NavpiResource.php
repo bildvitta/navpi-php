@@ -100,7 +100,7 @@ abstract class NavpiResource extends JsonResource
                     continue;
                 }
             } else {
-                if ($field->hasExceptAction($this->action)) {
+                if (!$field->hasAction($this->action)) {
                     continue;
                 }
             }
@@ -194,7 +194,7 @@ abstract class NavpiResource extends JsonResource
                         $item[$name] = $resource->$name;
                     }
                 } else {
-                    if ($field->hasExceptAction($this->action)) {
+                    if (!$field->hasAction($this->action)) {
                         continue;
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {

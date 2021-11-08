@@ -31,7 +31,7 @@ class FieldTest extends FieldsTestCase
     {
         $this->baseField->exceptActions(['create']);
 
-        $this->assertTrue($this->baseField->hasExceptAction('create'));
+        $this->assertTrue($this->baseField->hasAction('create'));
     }
 
     public function test_field_default()
@@ -112,6 +112,51 @@ class FieldTest extends FieldsTestCase
         $this->baseField->pivot('quantity');
 
         $this->assertEquals('quantity', $this->baseField->getPivot());
+    }
+
+    public function test_field_with_default_enableActions()
+    {
+        $this->assertTrue($this->baseField->hasEnableAction("create"));
+    }
+
+    public function test_field_with_enableActions()
+    {
+        $this->baseField->enableActions(['create']);
+        $this->assertTrue($this->baseField->hasEnableAction("create"));
+    }
+
+    public function test_field_without_enableActions()
+    {
+        $this->baseField->enableActions(['show']);
+        $this->assertFalse($this->baseField->hasEnableAction("create"));
+    }
+
+    public function test_field_with_default_hasActions()
+    {
+        $created = BaseField::create('test_field_with_default_hasActions');
+        $this->assertTrue($created->hasAction("create"));
+    }
+
+    public function test_field_without_default_enable_hasActions()
+    {
+        $created = BaseField::create('test_field_without_default_enable_hasActions');
+        $created->enableActions(['create']);
+        $this->assertTrue($created->hasAction("create"));
+    }
+
+    public function test_field_without_default_except_hasActions()
+    {
+        $created = BaseField::create('test_field_without_default_except_hasActions');
+        $created->exceptActions(['update']);
+        $this->assertTrue($created->hasAction("create"));
+    }
+
+    public function test_field_without_default_except_false_hasActions()
+    {
+        $created = BaseField::create('test_field_without_default_except_false_hasActions');
+        $created->enableActions([]);
+        $created->exceptActions(['update']);
+        $this->assertFalse($created->hasAction("update"));
     }
 
     public function test_field_toArray()
