@@ -29,8 +29,8 @@ abstract class NavpiResource extends JsonResource
     ];
 
     /**
-     * @param  null  $action
-     * @param  null  $resource
+     * @param null $action
+     * @param null $resource
      */
     public function __construct($action = null, $resource = null)
     {
@@ -42,7 +42,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -54,7 +54,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -100,7 +100,7 @@ abstract class NavpiResource extends JsonResource
                     continue;
                 }
             } else {
-                if ($field->hasExceptAction($this->action)) {
+                if (!$field->hasAction($this->action)) {
                     continue;
                 }
             }
@@ -194,7 +194,7 @@ abstract class NavpiResource extends JsonResource
                         $item[$name] = $resource->$name;
                     }
                 } else {
-                    if ($field->hasExceptAction($this->action)) {
+                    if (!$field->hasAction($this->action)) {
                         continue;
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
