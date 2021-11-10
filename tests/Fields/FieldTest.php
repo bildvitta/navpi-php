@@ -31,7 +31,7 @@ class FieldTest extends FieldsTestCase
     {
         $this->baseField->exceptActions(['create']);
 
-        $this->assertTrue($this->baseField->hasAction('create'));
+        $this->assertFalse($this->baseField->hasAction('create'));
     }
 
     public function test_field_default()
