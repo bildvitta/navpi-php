@@ -81,7 +81,7 @@ abstract class Field
 
     public function hasAction($action)
     {
-        return !$this->hasExceptAction($action) || $this->hasEnableAction($action);
+        return !$this->hasExceptAction($action) && $this->hasEnableAction($action);
     }
 
     public function hasExceptAction($action)
