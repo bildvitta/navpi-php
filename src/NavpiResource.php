@@ -3,6 +3,8 @@
 namespace Bildvitta\Navpi;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -29,8 +31,8 @@ abstract class NavpiResource extends JsonResource
     ];
 
     /**
-     * @param null $action
-     * @param null $resource
+     * @param  null  $action
+     * @param  null  $resource
      */
     public function __construct($action = null, $resource = null)
     {
@@ -42,7 +44,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return array
      */
@@ -54,7 +56,7 @@ abstract class NavpiResource extends JsonResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return array
      */
@@ -96,11 +98,11 @@ abstract class NavpiResource extends JsonResource
             if (request()->has('attributes')) {
                 $attributes = request()->get('attributes');
 
-                if (is_array($attributes) && !in_array($name, $attributes)) {
+                if (is_array($attributes) && ! in_array($name, $attributes)) {
                     continue;
                 }
             } else {
-                if (!$field->hasAction($this->action)) {
+                if (! $field->hasAction($this->action)) {
                     continue;
                 }
             }
@@ -150,7 +152,14 @@ abstract class NavpiResource extends JsonResource
                     if ($attributes->search($name) !== false) {
                         if ($children_resource_class = $field->childrenResourceClass()) {
                             $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
-                            $item[$name] = $children_resource->results();
+                            $results = collect($children_resource->results());
+
+                            if ($resource->$name() instanceof BelongsTo || $resource->$name() instanceof HasOne) {
+                                $item[$name] = $results->first();
+                            } else {
+                                $item[$name] = $results;
+                            }
+
                             continue;
                         }
                         if ($multiple_relation_key = $field->getMultipleRelationKey()) {
@@ -183,7 +192,7 @@ abstract class NavpiResource extends JsonResource
                         }
 
                         if ($field->getType() == 'date') {
-                            if (!is_null($resource->$name)) {
+                            if (! is_null($resource->$name)) {
                                 $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                             } else {
                                 $item[$name] = $resource->$name;
@@ -194,12 +203,19 @@ abstract class NavpiResource extends JsonResource
                         $item[$name] = $resource->$name;
                     }
                 } else {
-                    if (!$field->hasAction($this->action)) {
+                    if (! $field->hasAction($this->action)) {
                         continue;
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
                         $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
-                        $item[$name] = $children_resource->results();
+                        $results = collect($children_resource->results());
+
+                        if ($resource->$name() instanceof BelongsTo || $resource->$name() instanceof HasOne) {
+                            $item[$name] = $results->first();
+                        } else {
+                            $item[$name] = $results;
+                        }
+
                         continue;
                     }
                     if ($multiple_relation_key = $field->getMultipleRelationKey()) {
@@ -232,7 +248,7 @@ abstract class NavpiResource extends JsonResource
                     }
 
                     if ($field->getType() == 'date') {
-                        if (!is_null($resource->$name)) {
+                        if (! is_null($resource->$name)) {
                             $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                         } else {
                             $item[$name] = $resource->$name;

@@ -22,12 +22,21 @@ class SelectField extends Field
                 'value' => $key
             ]);
         }
+
         return $this->addParameter('options', $options);
     }
 
     public function multiple($relation_key = null)
     {
         $this->multiple_relation_key = $relation_key;
+
         return $this->addParameter('multiple', true);
+    }
+
+    public function children($children_resource_class)
+    {
+        $this->children_resource_class = $children_resource_class;
+
+        return $this;
     }
 }
