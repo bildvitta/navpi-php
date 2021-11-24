@@ -14,4 +14,20 @@ class NestedField extends Field
         $this->children_resource_class = $children_resource_class;
         return $this;
     }
+    
+    public function options($value, $parsed = false)
+    {
+        if ($parsed) {
+            return $this->addParameter('options', $value);
+        }
+
+        $options = [];
+        foreach ($value as $key => $label) {
+            array_push($options, [
+                'label' => $label,
+                'value' => $key
+            ]);
+        }
+        return $this->addParameter('options', $options);
+    }
 }
