@@ -152,12 +152,12 @@ abstract class NavpiResource extends JsonResource
                     if ($attributes->search($name) !== false) {
                         if ($children_resource_class = $field->childrenResourceClass()) {
                             $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
-                            $results = collect($children_resource->results());
+                            $relationshipResults = collect($children_resource->results());
 
-                            if ($resource->$name() instanceof BelongsTo || $resource->$name() instanceof HasOne) {
-                                $item[$name] = $results->first();
+                            if (in_array(get_class($resource->$name()), [BelongsTo::class, HasOne::class])) {
+                                $item[$name] = $relationshipResults->first();
                             } else {
-                                $item[$name] = $results;
+                                $item[$name] = $relationshipResults->toArray();
                             }
 
                             continue;
@@ -208,12 +208,12 @@ abstract class NavpiResource extends JsonResource
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
                         $children_resource = new $children_resource_class($this->action, $resource->$name()->get());
-                        $results = collect($children_resource->results());
+                        $relationshipResults = collect($children_resource->results());
 
-                        if ($resource->$name() instanceof BelongsTo || $resource->$name() instanceof HasOne) {
-                            $item[$name] = $results->first();
+                        if (in_array(get_class($resource->$name()), [BelongsTo::class, HasOne::class])) {
+                            $item[$name] = $relationshipResults->first();
                         } else {
-                            $item[$name] = $results;
+                            $item[$name] = $relationshipResults->toArray();
                         }
 
                         continue;
