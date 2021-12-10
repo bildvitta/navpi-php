@@ -181,7 +181,7 @@ abstract class NavpiResource extends JsonResource
                             continue;
                         }
                         if ($pivot = $field->getPivot()) {
-                            if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                            if (! is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                                 $item[$name] = $resource->pivot->$pivot;
                             }
                             continue;
@@ -237,7 +237,7 @@ abstract class NavpiResource extends JsonResource
                         continue;
                     }
                     if ($pivot = $field->getPivot()) {
-                        if (in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                        if (! is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                             $item[$name] = $resource->pivot->$pivot;
                         }
                         continue;
