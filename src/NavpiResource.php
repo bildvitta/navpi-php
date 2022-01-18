@@ -306,4 +306,18 @@ abstract class NavpiResource extends JsonResource
 
         return $this;
     }
+
+    public function previous($value = null)
+    {
+        $this->addWith('previous', $value);
+
+        return $this;
+    }
+
+    public function next($value = null)
+    {
+        $this->addWith('next', $value);
+
+        return $this;
+    }
 }
