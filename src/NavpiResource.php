@@ -149,7 +149,7 @@ abstract class NavpiResource extends JsonResource
 
         foreach ($resources as $resource) {
             foreach ($fields_map as $name => $field) {
-                $relationshipMethod = method_exists($name, $resource) ? $name : Str::camel($name);
+                $relationshipMethod = method_exists($resource, $name) ? $name : Str::camel($name);
 
                 if (request()->has('attributes')) {
                     if ($attributes->search($name) !== false) {
