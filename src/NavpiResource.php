@@ -31,6 +31,8 @@ abstract class NavpiResource extends JsonResource
         'code' => 200
     ];
 
+    protected $parent_resource = null;
+
     /**
      * @param  null  $action
      * @param  null  $resource
@@ -112,6 +114,7 @@ abstract class NavpiResource extends JsonResource
 
             if ($children_resource_class = $field->childrenResourceClass()) {
                 $children_resource = new $children_resource_class($this->action);
+                $children_resource->parent_resource = $this->resource;
                 $item['children'] = $children_resource->fields();
             }
 
@@ -155,6 +158,7 @@ abstract class NavpiResource extends JsonResource
                     if ($attributes->search($name) !== false) {
                         if ($children_resource_class = $field->childrenResourceClass()) {
                             $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
+                            $children_resource->parent_resource = $this->resource;
                             $relationshipResults = collect($children_resource->results());
 
                             if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class])) {
@@ -211,6 +215,7 @@ abstract class NavpiResource extends JsonResource
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
                         $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
+                        $children_resource->parent_resource = $this->resource;
                         $relationshipResults = collect($children_resource->results());
 
                         if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class])) {
@@ -308,5 +313,10 @@ abstract class NavpiResource extends JsonResource
         $this->addWith('count', $value);
 
         return $this;
+    }
+
+    public function parentResource()
+    {
+        return $this->parent_resource;
     }
 }
