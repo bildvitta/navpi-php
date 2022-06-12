@@ -39,4 +39,11 @@ class SelectField extends Field
 
         return $this;
     }
+
+    public function useLazyLoading($value)
+    {
+        $this->addParameter('useLazyLoading', $value);
+
+        return $this;
+    }
 }
