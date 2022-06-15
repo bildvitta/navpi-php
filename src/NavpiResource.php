@@ -5,6 +5,7 @@ namespace Bildvitta\Navpi;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -157,7 +158,7 @@ abstract class NavpiResource extends JsonResource
                             $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
                             $relationshipResults = collect($children_resource->results());
 
-                            if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class])) {
+                            if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
                                 $item[$name] = $relationshipResults->first();
                             } else {
                                 $item[$name] = $relationshipResults->toArray();
@@ -213,7 +214,7 @@ abstract class NavpiResource extends JsonResource
                         $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
                         $relationshipResults = collect($children_resource->results());
 
-                        if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class])) {
+                        if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
                             $item[$name] = $relationshipResults->first();
                         } else {
                             $item[$name] = $relationshipResults->toArray();
