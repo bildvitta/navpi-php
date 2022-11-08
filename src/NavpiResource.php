@@ -155,10 +155,10 @@ abstract class NavpiResource extends JsonResource
                 if (request()->has('attributes')) {
                     if ($attributes->search($name) !== false) {
                         if ($children_resource_class = $field->childrenResourceClass()) {
-                            $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
+                            $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod);
                             $relationshipResults = collect($children_resource->results());
 
-                            if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
+                            if (in_array(get_class($resource->$relationshipMethod), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
                                 $item[$name] = $relationshipResults->first();
                             } else {
                                 $item[$name] = $relationshipResults->toArray();
@@ -167,7 +167,7 @@ abstract class NavpiResource extends JsonResource
                             continue;
                         }
                         if ($multiple_relation_key = $field->getMultipleRelationKey()) {
-                            $related_list = $resource->$relationshipMethod();
+                            $related_list = $resource->$relationshipMethod;
 
                             if ($related_list instanceof Collection) {
                                 $item[$name] = $related_list->pluck($multiple_relation_key);
@@ -177,7 +177,7 @@ abstract class NavpiResource extends JsonResource
                             continue;
                         }
                         if ($relation_key = $field->getRelationKey()) {
-                            if ($related_model = $resource->$relationshipMethod()->first([$relation_key])) {
+                            if ($related_model = $resource->$relationshipMethod?->first()) {
                                 $item[$name] = $related_model->$relation_key;
                             } else {
                                 $item[$name] = null;
@@ -211,10 +211,10 @@ abstract class NavpiResource extends JsonResource
                         continue;
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
-                        $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
+                        $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod);
                         $relationshipResults = collect($children_resource->results());
 
-                        if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
+                        if (in_array(get_class($resource->$relationshipMethod), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
                             $item[$name] = $relationshipResults->first();
                         } else {
                             $item[$name] = $relationshipResults->toArray();
@@ -233,7 +233,7 @@ abstract class NavpiResource extends JsonResource
                         continue;
                     }
                     if ($relation_key = $field->getRelationKey()) {
-                        if ($related_model = $resource->$relationshipMethod()->first([$relation_key])) {
+                        if ($related_model = $resource->$relationshipMethod?->first()) {
                             $item[$name] = $related_model->$relation_key;
                         } else {
                             $item[$name] = null;
