@@ -42,6 +42,22 @@ class PasswordFieldTest extends FieldsTestCase
         $this->assertEquals($hideStrengthChecker, $this->getProperty($this->passwordField, 'hide_strength_checker'));
     }
 
+    public function test_fields_useStrengthChecker()
+    {
+        $useStrengthChecker = true;
+        $this->passwordField->useStrengthChecker($useStrengthChecker);
+
+        $this->assertEquals($useStrengthChecker, $this->getProperty($this->passwordField, 'use_strength_checker'));
+    }
+
+    public function test_fields_useStrengthChecker_false()
+    {
+        $useStrengthChecker = false;
+        $this->passwordField->useStrengthChecker($useStrengthChecker);
+
+        $this->assertEquals($useStrengthChecker, $this->getProperty($this->passwordField, 'use_strength_checker'));
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
