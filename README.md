@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/bildvitta/navpi-php?include_prereleases&style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
 [![Total Downloads](https://img.shields.io/packagist/dm/bildvitta/navpi-php?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
-[![Tests Master](https://img.shields.io/github/workflow/status/bildvitta/navpi-php/tests-master/master)](https://packagist.org/packages/bildvitta/navpi-php)
+[![PHP Tests](https://github.com/bildvitta/navpi-php/actions/workflows/php.yml/badge.svg?branch=master)](https://github.com/bildvitta/navpi-php/actions/workflows/php.yml)
 [![License](https://img.shields.io/packagist/l/bildvitta/navpi-php?style=flat-square)](https://packagist.org/packages/bildvitta/navpi-php)
 
 This package was created to assist in the development of API's for the standard used in [asteroid](https://github.com/bildvitta/asteroid).
