@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -33,8 +34,8 @@ abstract class NavpiResource extends JsonResource
     ];
 
     /**
-     * @param  null  $action
-     * @param  null  $resource
+     * @param null $action
+     * @param null $resource
      */
     public function __construct($action = null, $resource = null)
     {
@@ -44,21 +45,9 @@ abstract class NavpiResource extends JsonResource
     }
 
     /**
-     * Transform the resource into an array.
-     *
-     * @param  Request  $request
-     *
-     * @return array
-     */
-    public function toArray($request)
-    {
-        return $this->status;
-    }
-
-    /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      */
@@ -100,11 +89,11 @@ abstract class NavpiResource extends JsonResource
             if (request()->has('attributes')) {
                 $attributes = request()->get('attributes');
 
-                if (is_array($attributes) && ! in_array($name, $attributes)) {
+                if (is_array($attributes) && !in_array($name, $attributes)) {
                     continue;
                 }
             } else {
-                if (! $field->hasAction($this->action)) {
+                if (!$field->hasAction($this->action)) {
                     continue;
                 }
             }
@@ -123,6 +112,18 @@ abstract class NavpiResource extends JsonResource
     }
 
     abstract protected function fieldsMap();
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return $this->status;
+    }
 
     public function addWith($key, $value)
     {
@@ -148,6 +149,10 @@ abstract class NavpiResource extends JsonResource
 
         $attributes = collect(request()->get('attributes'));
 
+        $oneRelationships = [
+            BelongsTo::class, HasOne::class, HasOneThrough::class, MorphOne::class
+        ];
+
         foreach ($resources as $resource) {
             foreach ($fields_map as $name => $field) {
                 $relationshipMethod = method_exists($resource, $name) ? $name : Str::camel($name);
@@ -158,7 +163,7 @@ abstract class NavpiResource extends JsonResource
                             $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
                             $relationshipResults = collect($children_resource->results());
 
-                            if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
+                            if (in_array(get_class($resource->$relationshipMethod()), $oneRelationships)) {
                                 $item[$name] = $relationshipResults->first();
                             } else {
                                 $item[$name] = $relationshipResults->toArray();
@@ -185,7 +190,7 @@ abstract class NavpiResource extends JsonResource
                             continue;
                         }
                         if ($pivot = $field->getPivot()) {
-                            if (! is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                            if (!is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                                 $item[$name] = $resource->pivot->$pivot;
                             }
                             continue;
@@ -196,7 +201,7 @@ abstract class NavpiResource extends JsonResource
                         }
 
                         if ($field->getType() == 'date') {
-                            if (! is_null($resource->$name)) {
+                            if (!is_null($resource->$name)) {
                                 $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                             } else {
                                 $item[$name] = $resource->$name;
@@ -207,14 +212,14 @@ abstract class NavpiResource extends JsonResource
                         $item[$name] = $resource->$name;
                     }
                 } else {
-                    if (! $field->hasAction($this->action)) {
+                    if (!$field->hasAction($this->action)) {
                         continue;
                     }
                     if ($children_resource_class = $field->childrenResourceClass()) {
                         $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod()->get());
                         $relationshipResults = collect($children_resource->results());
 
-                        if (in_array(get_class($resource->$relationshipMethod()), [BelongsTo::class, HasOne::class, HasOneThrough::class])) {
+                        if (in_array(get_class($resource->$relationshipMethod()), $oneRelationships)) {
                             $item[$name] = $relationshipResults->first();
                         } else {
                             $item[$name] = $relationshipResults->toArray();
@@ -228,13 +233,8 @@ abstract class NavpiResource extends JsonResource
                         if ($related_list instanceof Collection) {
                             $item[$name] = $related_list->pluck($multiple_relation_key);
                         } else {
-                            if (is_array($multiple_relation_key)) {
-                                $item[$name] = $related_list->get($multiple_relation_key);
-                            } else {
-                                $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
-                            }
+                            $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
                         }
-
                         continue;
                     }
                     if ($relation_key = $field->getRelationKey()) {
@@ -246,7 +246,7 @@ abstract class NavpiResource extends JsonResource
                         continue;
                     }
                     if ($pivot = $field->getPivot()) {
-                        if (! is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
+                        if (!is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                             $item[$name] = $resource->pivot->$pivot;
                         }
                         continue;
@@ -257,7 +257,7 @@ abstract class NavpiResource extends JsonResource
                     }
 
                     if ($field->getType() == 'date') {
-                        if (! is_null($resource->$name)) {
+                        if (!is_null($resource->$name)) {
                             $item[$name] = Carbon::parse($resource->$name)->format('Y-m-d');
                         } else {
                             $item[$name] = $resource->$name;
