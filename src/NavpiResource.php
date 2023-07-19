@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use \Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -195,6 +196,15 @@ abstract class NavpiResource extends JsonResource
                             if (!is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                                 $item[$name] = $resource->pivot->$pivot;
                             }
+                            if ($resource->pivot instanceof Pivot) {
+                                $item[$name] = $resource->pivot->$pivot;
+                                if (str_contains($pivot, '.')) {
+                                    $pivotName = explode('.', $pivot);
+                                    $pivotRelation = $pivotName[0];
+                                    $pivotValue = $pivotName[1];
+                                    $item[$name] = $resource->pivot->$pivotRelation->$pivotValue;
+                                }
+                            }
                             continue;
                         }
                         if ($field->getType() == 'function') {
@@ -250,6 +260,15 @@ abstract class NavpiResource extends JsonResource
                     if ($pivot = $field->getPivot()) {
                         if (!is_null($resource->pivot) && in_array($pivot, array_keys($resource->pivot->attributesToArray()))) {
                             $item[$name] = $resource->pivot->$pivot;
+                        }
+                        if ($resource->pivot instanceof Pivot) {
+                            $item[$name] = $resource->pivot->$pivot;
+                            if (str_contains($pivot, '.')) {
+                                $pivotName = explode('.', $pivot);
+                                $pivotRelation = $pivotName[0];
+                                $pivotValue = $pivotName[1];
+                                $item[$name] = $resource->pivot->$pivotRelation->$pivotValue;
+                            }
                         }
                         continue;
                     }
