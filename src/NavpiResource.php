@@ -245,7 +245,11 @@ abstract class NavpiResource extends JsonResource
                         if ($related_list instanceof Collection) {
                             $item[$name] = $related_list->pluck($multiple_relation_key);
                         } else {
-                            $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                            if (is_array($multiple_relation_key)) {
+                                $item[$name] = $related_list->get($multiple_relation_key);
+                            } else {
+                                $item[$name] = $related_list->get([$multiple_relation_key])->pluck($multiple_relation_key);
+                            }
                         }
                         continue;
                     }
