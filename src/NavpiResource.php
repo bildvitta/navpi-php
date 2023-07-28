@@ -185,7 +185,7 @@ abstract class NavpiResource extends JsonResource
                             continue;
                         }
                         if ($relation_key = $field->getRelationKey()) {
-                            if ($related_model = $resource->$relationshipMethod?->first()) {
+                            if ($related_model = $resource->$relationshipMethod()->first([$relation_key])) {
                                 $item[$name] = $related_model->$relation_key;
                             } else {
                                 $item[$name] = null;
@@ -254,7 +254,7 @@ abstract class NavpiResource extends JsonResource
                         continue;
                     }
                     if ($relation_key = $field->getRelationKey()) {
-                        if ($related_model = $resource->$relationshipMethod?->first()) {
+                        if ($related_model = $resource->$relationshipMethod()->first([$relation_key])) {
                             $item[$name] = $related_model->$relation_key;
                         } else {
                             $item[$name] = null;
