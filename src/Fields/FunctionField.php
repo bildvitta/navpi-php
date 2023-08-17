@@ -4,6 +4,8 @@ namespace Bildvitta\Navpi\Fields;
 
 class FunctionField extends Field
 {
+    protected array $functionParams = [];
+
     public function __construct($name)
     {
         parent::__construct($name, 'function');
@@ -34,5 +36,5 @@ class FunctionField extends Field
             ]);
         }
         return $this->addParameter('options', $options);
-    }
+    }    
 }
