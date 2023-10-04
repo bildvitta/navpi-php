@@ -166,7 +166,7 @@ abstract class NavpiResource extends JsonResource
                             $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod);
                             $relationshipResults = collect($children_resource->results());
 
-                            if (in_array(get_class($resource->$relationshipMethod), $oneRelationships)) {
+                            if (in_array(get_class($resource->$relationshipMethod()), $oneRelationships)) {
                                 $item[$name] = $relationshipResults->first();
                             } else {
                                 $item[$name] = $relationshipResults->toArray();
@@ -231,7 +231,7 @@ abstract class NavpiResource extends JsonResource
                         $children_resource = new $children_resource_class($this->action, $resource->$relationshipMethod);
                         $relationshipResults = collect($children_resource->results());
 
-                        if (in_array(get_class($resource->$relationshipMethod), $oneRelationships)) {
+                        if (in_array(get_class($resource->$relationshipMethod()), $oneRelationships)) {
                             $item[$name] = $relationshipResults->first();
                         } else {
                             $item[$name] = $relationshipResults->toArray();
